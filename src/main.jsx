@@ -19,3 +19,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </ThemeProvider>
   </React.StrictMode>,
 )
+
+/*
+fetch('https://fakestoreapi.com/users')
+            .then(res=>res.json())
+            .then(json=>console.log(json))
+
+*/            

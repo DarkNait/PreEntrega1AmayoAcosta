@@ -8,10 +8,11 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { Link } from 'react-router-dom'
 import CartWidget from './CartWidget'
+import brandLogo from '../../assets/img/djstore_logo.png';
 
 const NavBar = () => {
-
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -28,10 +29,12 @@ const NavBar = () => {
         elevation={0}
         sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
     >
-        <Toolbar sx={{ flexWrap: 'wrap' }}>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                DJ-Store
-            </Typography>
+        <Toolbar sx={{ flexWrap: 'wrap' }}>   
+            <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'left', textAlign: 'center' }} >
+                <Box sx={{ display: 'flex' }} component={Link} to={"/"}>
+                    <img src={brandLogo} alt="DJ Store" style={{width: '80px'}} />
+                </Box>
+            </Box>
             <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', textAlign: 'center' }}>
                 <Button
                     id="basic-button"
@@ -55,12 +58,16 @@ const NavBar = () => {
                     'aria-labelledby': 'basic-button',
                     }}
                 >
-                    <MenuItem onClick={handleClose}>Sobre Nosotros</MenuItem>
-                    <MenuItem onClick={handleClose}>Contacto</MenuItem>
-                    <MenuItem onClick={handleClose}>Locales</MenuItem>
+                    <MenuItem onClick={handleClose} component={Link} to={"/"}>Todas</MenuItem>
+                    <MenuItem onClick={handleClose} component={Link} to={"/category/A"}>Auriculares</MenuItem>
+                    <MenuItem onClick={handleClose} component={Link} to={"/category/B"}>Bandejas Giradiscos</MenuItem>
+                    <MenuItem onClick={handleClose} component={Link} to={"/category/C"}>Mixers</MenuItem>
+                    <MenuItem onClick={handleClose} component={Link} to={"/category/D"}>Reproductores</MenuItem>
                 </Menu>
-            </Box>                      
-            <CartWidget />
+            </Box> 
+            <Link to="/cart">
+                <CartWidget />
+            </Link>                     
         </Toolbar>    
     </AppBar>
   )
