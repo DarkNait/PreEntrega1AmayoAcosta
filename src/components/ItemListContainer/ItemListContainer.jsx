@@ -1,45 +1,60 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
-import { Container, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import ItemList from '../ItemList/ItemList';
-import { getProducts } from '../../data/asyncMock';
+import { query, where, collection, getDocs, getFirestore } from "firebase/firestore"
+import Loader from '../Loader/Loader';
 
-const ItemListContainer = ({greeting}) => {
+const ItemListContainer = () => {
   const {category} = useParams(); 
   const [productos, setProductos] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  //Descomentar estas lineas cuando haya que consumir un recurso externo
-  /*
-  const getProducts = () => {      
-    const response = await fetch('url/products')
-    const data = await response.json()
-
-    return data    
-  }
-  */
-
-  useEffect(()=>{    
-    console.log("Cargando productos")
+  const getProducts = (category) => {
+    console.log("Cargando productos from firebase")        
+    const db = getFirestore()
+    let itemsCollection = []
     
-    getProducts(category).then((resultado) => {
-        console.log(resultado);
-        setProductos( resultado )
-      }
-    ).catch((error) => {
+    if(category === undefined) {
+      itemsCollection = collection(db, "productos")
+    } else {
+      itemsCollection = query(collection(db, "productos"), where( "categoria", "==", category ))
+    }
+    
+    getDocs(itemsCollection).then((snapshot) => {      
+      const docs = snapshot.docs.map((item) => { 
+        let doc = {
+          ...item.data(), 
+          id: item.id  
+        }
+
+        return doc;
+      });
+
+      setProductos(docs)
+      setLoading(false)
+
+    }).catch((error) => {
         console.log(error);
+        setLoading(false)
       }
     )
+  }
+ 
 
+  useEffect(() => {        
+    setLoading(true)
+    getProducts(category)
   }, [category])
 
   return (
-    <Container maxWidth="lg" >   
+    <React.Fragment>   
         <Box sx={{ alignItems: 'center', textAlign: 'center'}}>
-            <h2>{greeting}</h2>
+            <h2>Bienvenido a DJ-Store</h2>
         </Box>    
-        <ItemList productos={productos}/>        
-    </Container>
+        { loading ? <Loader /> : <ItemList productos={productos}/> }
+    </React.Fragment>
   )
 }
 

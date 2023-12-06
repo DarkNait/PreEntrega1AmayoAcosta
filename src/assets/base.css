@@ -1,0 +1,13 @@
+body{
+    height: 100vh;
+    margin: 0;
+    overflow-y: auto;
+}
+
+#root{
+    height: 100%;
+}
+
+.main-container {
+    height: calc(100% - 104px);
+}

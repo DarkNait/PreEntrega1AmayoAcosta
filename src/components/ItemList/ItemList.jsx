@@ -5,7 +5,7 @@ import Item from '../Item/Item';
 const ItemList = ({productos}) => {
 
   return (
-    <Box sx={{ alignItems: 'center', textAlign: 'center' }}>
+    <Box sx={{ alignItems: 'center', textAlign: 'center', marginTop: '24px' }}>
         <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>        
             {
                 productos.map((p)=>{

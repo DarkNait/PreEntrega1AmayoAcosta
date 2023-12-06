@@ -1,44 +1,59 @@
 import {useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import ItemDetail from '../ItemDetail/ItemDetail';
-import { getProduct } from '../../data/asyncMock';
+import { doc, getDoc, getFirestore } from "firebase/firestore"
+import Loader from '../Loader/Loader';
 
 const ItemDetailContainer = () => {
     const {id} = useParams(); 
-    const [producto, setProducto] = useState([])
-
-    //Descomentar estas lineas cuando haya que consumir un recurso externo
-    /*
-    const getProducts = () => {      
-      const response = await fetch('url/products')
-      const data = await response.json()
+    const [producto, setProducto] = useState({})
+    const [loading, setLoading] = useState(true)
+    const [productExists, setProductoExists] = useState(false)
   
-      return data    
-    }
-    */
+    const getProduct = (id) => {
+      console.log("Cargando producto por ID from firebase")        
+      const db = getFirestore()
+      const item = doc(db, "productos", id)
   
-    useEffect(()=>{    
-      console.log("Cargando producto")
-      
-      getProduct(id).then((resultado) => {
-          console.log(resultado);
-          setProducto( resultado )
-        }
-      ).catch((error) => {
+      getDoc(item).then((snapshot) => {      
+        if(snapshot.exists()) {
+          setProductoExists(true)
+          const doc = {...snapshot.data(), id: snapshot.id}
+          setProducto(doc)
+        }        
+        setLoading(false)
+  
+      }).catch((error) => {
           console.log(error);
+          setLoading(false)
         }
       )
-  
+    }
+
+    useEffect(()=>{          
+      setLoading(true)      
+      getProduct(id)  
     }, [])
-  
-    return (
-      <Container maxWidth="lg" >   
-        <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', textAlign: 'center', justifyContent: 'space-evenly', paddingTop: '24px' }}>
-            <ItemDetail producto={producto}/>
+    
+    if(productExists){
+      return (      
+        <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', textAlign: 'center', justifyContent: 'space-evenly' }}>
+            { loading ? <Loader /> : <ItemDetail producto={producto}/> }               
         </Box>           
-      </Container>
-    )
+      )
+    } else {
+      return (
+        <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', textAlign: 'center', justifyContent: 'space-evenly' }}>    
+          { loading ? <Loader /> : 
+            <Typography variant="h5" gutterBottom mt={10}>
+              No existe el producto solicitado
+            </Typography>        
+          }
+        </Box>  
+      )
+
+    }
 }
 
 export default ItemDetailContainer

@@ -1,10 +1,10 @@
 import "./ItemCount.css";
-import React, { useState, forwardRef } from 'react'
+import React, { useState, useContext, forwardRef } from 'react'
 import { Button, Box, Snackbar, ButtonGroup, Slide } from '@mui/material' 
 import MuiAlert from '@mui/material/Alert';
 
+const ItemCount = ({parentCallback}) => {
 
-const ItemCount = () => {
     const Toast = forwardRef(function Alert(props, ref) {
         return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
     });
@@ -48,6 +48,8 @@ const ItemCount = () => {
     const addToCart = () => {
         //TODO validar que no pueda ingresar mas cantidad de lo que hay en stock
         setSnackbarState({ ...snackbarState, open: true });
+        
+        parentCallback(count);        
     }
 
     return (        

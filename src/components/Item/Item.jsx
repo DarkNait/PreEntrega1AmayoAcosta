@@ -7,16 +7,16 @@ const Item = ({producto}) => {
     <Card sx={{ maxWidth: 300, minHeight: 355 }}>
         <CardMedia
         sx={{ height: 140 }}
-        image={`/assets/img/products/producto${producto.id}.jpg`}
+        image={producto.imagen}
         title={producto.titulo}
         />
         <CardContent>
-        <Typography gutterBottom variant="h6" component="div">
-            {producto.titulo}
-        </Typography>
-        <Typography gutterBottom variant="h6" component="div">
-            ${producto.precio}
-        </Typography>
+          <Typography gutterBottom variant="h6" component="div">
+              {producto.titulo}
+          </Typography>
+          <Typography gutterBottom variant="h6" component="div">
+              ${producto.precio}
+          </Typography>
         </CardContent>
         <CardActions sx={{ justifyContent: 'center'}}>
             <Button size="small" component={Link} to={`/product/${producto.id}`}>Ver Detalle</Button>
